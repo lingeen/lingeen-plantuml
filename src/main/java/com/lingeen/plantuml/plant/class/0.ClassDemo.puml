@@ -1,0 +1,126 @@
+@startuml
+' principles:
+' hidden to structure,the others to detail relations
+'basic element
+package "basic element" #DDDDDD  {
+
+circle interfaceWithoutBody
+interface interfaceWithBody
+
+abstract AbstractClass
+class Class
+
+}
+
+'vertical relation
+package  "vertical relation" {
+interface Fruit #yellow
+class Apple
+Fruit<|..Apple:Apple implements Fruit
+
+abstract Father #LightBlue
+class Son
+Father<|--Son :Son extends Father
+
+}
+
+
+'horizontal relation
+package "horizontal relation" {
+    class Car{
+        engines:Engine[]
+    }
+
+    class Engine{
+        ENo:String
+    }
+    Car *-[#red] Engine :composition:\n Engine is a part of Car
+
+    class ClassRoom{
+        students:Student[]
+    }
+    class Student
+    ClassRoom o- Student: aggregation:\n Student is in the ClassRoom
+
+
+    class Person{
+        usePhone(IPhone phone)
+    }
+
+    class IPhone
+    Person .>IPhone :dependency:\n Person uses IPhone
+}
+
+' notes everywhere
+'1 note on element
+class NoteElement
+note right of NoteElement
+    right
+end note
+
+note left of NoteElement:left
+note top of NoteElement:top
+note bottom of NoteElement:bottom
+
+'2 note on content,no top/bottom for content
+class NoteField{
+    -name
+    +start()
+}
+
+'2.1 note on field
+note right of NoteField::name
+    right on name
+end note
+
+note left of NoteField::name
+    left on name
+end note
+
+'2.2 note on method
+note right of NoteField::start
+    right on start
+end note
+
+note left of NoteField::start
+    left on start
+end note
+
+'3 note on link
+class LinkA
+class LinkB
+LinkA --[#red]> LinkB
+note on link #red: a links b
+
+class LinkC
+LinkB "1"-[#blue]|>"n" LinkC
+
+note left on link #LightBlue
+this is b links c
+and it is blue
+end note
+
+'test
+'aaa -down-|>bbb
+
+
+
+node "My system" {
+  aaa .l.|>bbb
+  aaa .r.|>ccc
+  aaa .u.|>ddd
+  aaa .d.|>eee
+}
+
+node "My system2" {
+  aaaa ..[hidden]|>bbbb
+  bbbb .[hidden]|>cccc
+  aaaa ..|>bbbb
+'  aaaa ..|>cccc
+
+}
+
+
+
+
+@enduml

@@ -1,0 +1,74 @@
+@startuml
+note "design patterns basic principle" as floatNote
+interface A
+
+interface B
+interface C
+class a
+class b
+
+'rearrange elements
+A -r[hidden]- B
+B -r[hidden]- C
+A -d[hidden]- a
+a -d[hidden]- b
+
+'construct relations
+A o-r[#black]-  B   :Aggregation
+B o-r[#black]-  C   :Aggregation
+a ..u[#black]|> A  :Implements
+b --u[#black]|> a   :Extends
+note on link #lightblue
+6.liskov substitution principle:
+any place
+where you could use parent class
+must be permitted
+to use child classes.
+child classes must not lose the functions extended from parent class
+end note
+
+
+
+'notes for explanation
+note left of  b  #lightpink
+1.open closed principle:
+extending a new function
+by extending base class
+or realize base interface
+,not by modifying base class
+or interface
+end note
+
+note left of  a   #lightpink
+2. single responsibility priciple:
+one class handles one type of tasks.
+for example :
+one video system need to be splited into a video system and a audio system
+
+end note
+
+note right of C  #yellow
+3. interface segregation principle:
+minize the interface,avoiding that
+invokers imports the  dependencies
+they don`t need
+end note
+
+note top of C #yellow
+5. least knowledge principle:
+considering that interface4 and  interface6 are segregated,
+if interface4 wants to use interface6,
+interface4 must invoke interface6
+through  interface2.
+with all above,to reduce the coupling degree between classes or interfaces
+
+end note
+
+note left of  A   #yellow
+4. dependence inversion principle:
+when we are coding,try more
+to depend on stable abtract layer,
+not to depend on unstable realization layer
+end note
+
+@enduml

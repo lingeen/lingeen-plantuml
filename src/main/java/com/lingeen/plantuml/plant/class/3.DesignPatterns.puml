@@ -1,0 +1,200 @@
+@startuml
+note as staticMethod
+simple static method:
+      essence:
+           factory:class=1:N
+
+      advantages:
+      determine which case to create
+      by the param given by client
+
+      disadvantages:
+      no personalized creation
+      different type of objects
+      are created
+      from one place,
+      so that the pertinent creation
+      to different type of objects
+      is hard to realize
+end note
+
+class Client
+class SimpleFactory{
+    +create(type : String) : Product
+}
+interface Product{
+    +oper1()
+    +oper2()
+}
+class ProductA{
+    +oper1()
+    +oper2()
+}
+class ProductB{
+    +oper1()
+    +oper2()
+}
+'struct by hidden firstly
+'link elements
+ Client -r[hidden]- SimpleFactory
+ SimpleFactory -r[hidden]- Product
+ ProductA --d[hidden]- Product
+ ProductB --u[hidden]- Product
+
+ Client .[#black]> SimpleFactory :Dependency
+ SimpleFactory ..u[#black]> ProductA :Dependency
+ SimpleFactory ..d[#black]> ProductB :Dependency
+ ProductA ..[#black]|> Product   :Implements
+ ProductB ..[#black]|> Product   :Implements
+
+'SimpleFactory -r[hidden]- Product
+'SimpleFactory .[#black]> ProductA :Dependency
+'SimpleFactory .[#black]> ProductB :Dependency
+'ProductA ..[#black]|>  Product  :Implements
+'ProductB ..[#black]|>  Product  :Implements
+
+note left of  SimpleFactory::create   #yellow
+determine which type of Product to create
+by the given type of a String
+and SimpleFactory holds the links of
+Product,ProductA and ProductB
+end note
+
+
+newpage
+note as factoryMethod
+factory method:
+factory:class=1:1
+
+the creat method
+is not only one static method,
+but is abstracted into several methods
+to be realized
+in different implementation class
+
+disadvantages:
+one class,one factory
+too many classes
+the number of factorycreate class
+is according to
+the number of product class,
+which makes the number of classes increase in pairs
+
+end note
+
+class Client
+
+interface FactoryMethod{
+    +create(type : String) : Product
+}
+
+class FactoryMethodCreateA{
+    +create(type : String) : Product
+}
+
+class FactoryMethodCreateB{
+    +create(type : String) : Product
+}
+
+interface Product{
+    +oper1()
+    +oper2()
+}
+class ProductA{
+    +oper1()
+    +oper2()
+}
+class ProductB{
+    +oper1()
+    +oper2()
+}
+
+'prelocate elements->create structure
+Client -r[hidden]- FactoryMethod
+FactoryMethod -r[hidden]- Product
+FactoryMethodCreateA --d[hidden]- FactoryMethod
+FactoryMethodCreateB --u[hidden]- FactoryMethod
+ProductA --d[hidden]- Product
+ProductB --u[hidden]- Product
+
+'create relations
+FactoryMethodCreateA ..[#black]|>  FactoryMethod  :Implements
+FactoryMethodCreateB ..[#black]|>  FactoryMethod  :Implements
+ProductA ..[#black]|>  Product  :Implements
+ProductB ..[#black]|>  Product  :Implements
+'
+Client .[#black]> FactoryMethod :Dependency
+FactoryMethodCreateA .[#black]> ProductA :Dependency
+FactoryMethod .[#black]> Product :Dependency
+'FactoryMethodCreateB .[#black]> ProductB :Dependency
+
+
+newpage
+' package to verticals ,namespace to hironzonals，and they are independent of each
+
+
+package "client" <<Node>>{
+    class Client
+}
+
+client -r[hidden]- factory
+
+package "factory" <<Node>>{
+        interface DaoFactory
+        class   MysqlDaoFactory
+        class   OracleDaoFactory
+        MysqlDaoFactory --d[hidden]- DaoFactory
+        OracleDaoFactory --u[hidden]- DaoFactory
+        MysqlDaoFactory ..d[#black]|>  DaoFactory  :Implements
+        OracleDaoFactory ..u[#black]|>  DaoFactory  :Implements
+}
+
+factory -r[hidden]- impl
+
+package "impl" <<Node>>{
+    package "mysql" <<Node>>{
+        class  MysqlUser
+        class  MysqlType
+    }
+    package "oracle" <<Node>>{
+        class   OracleUser
+        class   OracleType
+    }
+    mysql -d[hidden]- oracle
+}
+
+impl -r[hidden]- dao
+
+package "dao" <<Node>>{
+        interface UserDao
+        interface TypeDao
+        UserDao --d[hidden]- TypeDao
+}
+Client .[#black]> DaoFactory :Dependency
+MysqlDaoFactory .[#black]> MysqlType :Dependency
+MysqlDaoFactory .[#black]> MysqlUser :Dependency
+OracleDaoFactory .[#black]> OracleUser :Dependency
+OracleDaoFactory .[#black]> OracleType :Dependency
+
+MysqlUser .r[#black]> UserDao :Dependency
+MysqlType .r[#black]> TypeDao :Dependency
+OracleUser .r[#black]> UserDao :Dependency
+OracleType .r[#black]> TypeDao :Dependency
+
+
+
+' MysqlDaoFactory ..r[#black]> MysqlUser :Dependency
+' MysqlDaoFactory ..r[#black]> MysqlType :Dependency
+' OracleDaoFactory ..r[#black]> OracleUser :Dependency
+' OracleDaoFactory ..r[#black]> OracleType :Dependency
+
+' MysqlUser .r[#black]|>  UserDao  :Implements
+' OracleUser .r[#black]|>  UserDao  :Implements
+' MysqlType .r[#black]|>  TypeDao  :Implements
+' OracleType .r[#black]|>  TypeDao  :Implements
+
+
+
+
+
+@enduml

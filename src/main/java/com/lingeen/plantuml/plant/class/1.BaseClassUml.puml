@@ -1,0 +1,45 @@
+@startuml
+'basic elements
+note "basic elements" as overallnote
+class democlass
+circle "interface hiding functions"
+interface "interface showing functions"
+newpage
+
+'vertical relation
+note "vertical relation" as overallnote
+interface Fruit
+class Apple
+abstract Father
+class Son
+
+Fruit <|.. Apple : implements
+Father <|-- Son : extends
+
+newpage
+
+'horizontal relation
+note "horizontal relation" as overallnote
+'enumerate all base elements
+class Car
+class Engine
+class Classroom
+class Student
+class Person
+class Phone
+
+'rearrange base classes
+Car -[hidden]->Classroom
+Classroom -[hidden]->Person
+
+Car *-r- Engine : composition
+Classroom o-r- Student : aggregation
+Person .r> Phone :dependency
+
+
+'rearrange associate classes
+
+
+
+
+@enduml
