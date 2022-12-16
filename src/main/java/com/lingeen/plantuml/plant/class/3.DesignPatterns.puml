@@ -131,70 +131,71 @@ FactoryMethod .[#black]> Product :Dependency
 
 newpage
 ' package to verticals ,namespace to hironzonals，and they are independent of each
+note as floatNote #yellow
+     abstract factory:
+     factory:class=M:N
 
+     prefix+suffix
+     the final result=
+     factoryname+productname
+end note
+class Client
 
-package "client" <<Node>>{
-    class Client
+package factory {
+         interface DaoFactory{
+            +createUser(type:String) :UserDao
+            +createType(type:String) :TypeDao
+         }
+         class   MysqlDaoFactory{
+            +createUser(type:String) :UserDao
+            +createType(type:String) :TypeDao
+         }
+note top of  MysqlDaoFactory   #yellow
+one factory creating two type of objects
+for one type of environment
+end note
+         class   OracleDaoFactory{
+            +createUser(type:String) :UserDao
+            +createType(type:String) :TypeDao
+         }
+         MysqlDaoFactory --d[hidden]- DaoFactory
+         OracleDaoFactory --u[hidden]- DaoFactory
+         MysqlDaoFactory ..d[#black]|>  DaoFactory  :Implements
+         OracleDaoFactory ..u[#black]|>  DaoFactory  :Implements
 }
 
-client -r[hidden]- factory
-
-package "factory" <<Node>>{
-        interface DaoFactory
-        class   MysqlDaoFactory
-        class   OracleDaoFactory
-        MysqlDaoFactory --d[hidden]- DaoFactory
-        OracleDaoFactory --u[hidden]- DaoFactory
-        MysqlDaoFactory ..d[#black]|>  DaoFactory  :Implements
-        OracleDaoFactory ..u[#black]|>  DaoFactory  :Implements
+package daoimpl {
+            class  MysqlUser
+            class  MysqlType
+            class   OracleUser
+            class   OracleType
+            MysqlUser --d[hidden]- MysqlType
+            MysqlType --d[hidden]- OracleUser
+            OracleUser --d[hidden]- OracleType
+}
+package daointer {
+            interface UserDao
+            interface TypeDao
+            UserDao --d[hidden]- TypeDao
 }
 
-factory -r[hidden]- impl
 
-package "impl" <<Node>>{
-    package "mysql" <<Node>>{
-        class  MysqlUser
-        class  MysqlType
-    }
-    package "oracle" <<Node>>{
-        class   OracleUser
-        class   OracleType
-    }
-    mysql -d[hidden]- oracle
-}
+Client  -r[hidden]- factory
+factory -r[hidden]- daoimpl
+daoimpl -r[hidden]- daointer
 
-impl -r[hidden]- dao
 
-package "dao" <<Node>>{
-        interface UserDao
-        interface TypeDao
-        UserDao --d[hidden]- TypeDao
-}
 Client .[#black]> DaoFactory :Dependency
-MysqlDaoFactory .[#black]> MysqlType :Dependency
-MysqlDaoFactory .[#black]> MysqlUser :Dependency
-OracleDaoFactory .[#black]> OracleUser :Dependency
-OracleDaoFactory .[#black]> OracleType :Dependency
-
-MysqlUser .r[#black]> UserDao :Dependency
-MysqlType .r[#black]> TypeDao :Dependency
-OracleUser .r[#black]> UserDao :Dependency
-OracleType .r[#black]> TypeDao :Dependency
+'
+MysqlDaoFactory .r[#black]> MysqlUser :Dependency
+MysqlDaoFactory .r[#black]> MysqlType :Dependency
+OracleDaoFactory .r[#black]> OracleUser :Dependency
+OracleDaoFactory .r[#black]> OracleType :Dependency
 
 
-
-' MysqlDaoFactory ..r[#black]> MysqlUser :Dependency
-' MysqlDaoFactory ..r[#black]> MysqlType :Dependency
-' OracleDaoFactory ..r[#black]> OracleUser :Dependency
-' OracleDaoFactory ..r[#black]> OracleType :Dependency
-
-' MysqlUser .r[#black]|>  UserDao  :Implements
-' OracleUser .r[#black]|>  UserDao  :Implements
-' MysqlType .r[#black]|>  TypeDao  :Implements
-' OracleType .r[#black]|>  TypeDao  :Implements
-
-
-
-
+ MysqlUser .r[#black]|>  UserDao  :Implements
+ OracleUser .r[#black]|>  UserDao  :Implements
+ MysqlType .r[#black]|>  TypeDao  :Implements
+ OracleType .r[#black]|>  TypeDao  :Implements
 
 @enduml
