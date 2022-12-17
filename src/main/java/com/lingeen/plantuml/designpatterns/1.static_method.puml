@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "static Method"
+
+class Client
+class SimpleFactory{
+    +create(type : String) : Product
+}
+package product{
+    interface Product{
+        +oper1()
+        +oper2()
+    }
+    class ProductA{
+        +oper1()
+        +oper2()
+    }
+    class ProductB{
+        +oper1()
+        +oper2()
+    }
+    ProductA ..u[#black]|> Product   :Implements
+    ProductB ..u[#black]|> Product   :Implements
+}
+'main structure construction
+ Client .[#black]> SimpleFactory :Dependency
+
+' detail relations construction
+ SimpleFactory::create .[#black]> Product :Dependency
+
+
+@enduml

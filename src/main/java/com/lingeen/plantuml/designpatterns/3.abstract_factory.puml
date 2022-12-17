@@ -1,0 +1,55 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title factoryMethod
+
+class Client
+
+package facotory{
+    interface FactoryMethod{
+        +create(type : String) : Product
+    }
+    class FactoryMethodCreateA{
+        +create(type : String) : Product
+    }
+
+    class FactoryMethodCreateB{
+        +create(type : String) : Product
+    }
+    FactoryMethod --u[hidden]- FactoryMethodCreateA
+    FactoryMethod --d[hidden]- FactoryMethodCreateB
+}
+
+package product{
+    interface Product{
+        +oper1()
+        +oper2()
+    }
+    class ProductA{
+        +oper1()
+        +oper2()
+    }
+    class ProductB{
+        +oper1()
+        +oper2()
+    }
+    Product --u[hidden]- ProductA
+    Product --d[hidden]- ProductB
+}
+
+'prelocate elements->create structure
+Client -r[hidden]- FactoryMethod
+FactoryMethod -r[hidden]- Product
+
+
+'create relations
+FactoryMethodCreateA ..[#black]|>  FactoryMethod  :Implements
+FactoryMethodCreateB ..[#black]|>  FactoryMethod  :Implements
+ProductA ..[#black]|>  Product  :Implements
+ProductB ..[#black]|>  Product  :Implements
+'
+Client .[#black]> FactoryMethod :Dependency
+FactoryMethodCreateA .[#black]> ProductA :Dependency
+FactoryMethod .[#black]> Product :Dependency
+FactoryMethodCreateB .[#black]> ProductB :Dependency
+
+@enduml
